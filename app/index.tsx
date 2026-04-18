@@ -1,15 +1,38 @@
-import { Text, View } from "react-native";
+import React, { useEffect } from 'react'
+import { View, Text } from 'react-native'
+import {
+  Camera,
+  useCameraDevice,
+  useCameraPermission,
+} from 'react-native-vision-camera'
 
 export default function Index() {
+  const { hasPermission, requestPermission } = useCameraPermission()
+  const device = useCameraDevice('back')
+
+  useEffect(() => {
+    const run = async () => {
+      if (!hasPermission) {
+        await requestPermission()
+      }
+    }
+
+    run()
+  }, [hasPermission])
+
+  if (!device) {
+    return (
+      <View>
+        <Text>No camera device found</Text>
+      </View>
+    )
+  }
+
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
-  );
+    <Camera
+      style={{ flex: 1 }}
+      device={device}
+      isActive={true}
+    />
+  )
 }
