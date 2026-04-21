@@ -43,14 +43,14 @@ export default function Onboarding3() {
 
         <View className="w-full flex-row">
           <Pressable
-            onPress={() => router.replace("/user_login")}
+            onPress={() => router.replace("/login")}
             className="mr-2 flex-1 rounded-full bg-primary py-4"
           >
             <Text className="text-center text-body text-surface">Skip</Text>
           </Pressable>
 
           <Pressable
-            onPress={() => router.replace("/user_login")}
+            onPress={() => router.replace("/login")}
             className="ml-2 flex-1 rounded-full bg-secondary py-4"
           >
             <Text className="text-center text-body text-neutral-900">
