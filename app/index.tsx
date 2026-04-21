@@ -38,7 +38,11 @@ export default function Index() {
         </View>
 
         <View className="w-full flex-row">
-          <Pressable className="mr-2 flex-1 rounded-full bg-primary py-4">
+
+          <Pressable 
+            onPress={() => router.push("/login")}
+            className="mr-2 flex-1 rounded-full bg-primary py-4"
+            >
             <Text className="text-center text-body text-surface">Skip</Text>
           </Pressable>
 
