@@ -30,24 +30,27 @@ export default function Index() {
 
           <View className="mt-10 flex-row items-center">
             <View className="h-4 w-12 rounded-full bg-primary" />
-            <Pressable onPress={() => router.push("/onboarding-2")}>
+            <Pressable onPress={() => router.push("/onboarding_2")}>
               <View className="ml-6 h-4 w-4 rounded-full bg-neutral-300" />
             </Pressable>
-            <View className="ml-6 h-4 w-4 rounded-full bg-neutral-300" />
+
+            <Pressable onPress={() => router.push("/onboarding_3")}>
+              <View className="ml-6 h-4 w-4 rounded-full bg-neutral-300" />
+            </Pressable>
           </View>
         </View>
 
         <View className="w-full flex-row">
 
           <Pressable 
-            onPress={() => router.push("/login")}
+            onPress={() => router.push("/user_login")}
             className="mr-2 flex-1 rounded-full bg-primary py-4"
             >
             <Text className="text-center text-body text-surface">Skip</Text>
           </Pressable>
 
           <Pressable
-            onPress={() => router.push("/onboarding-2")}
+            onPress={() => router.push("/onboarding_2")}
             className="ml-2 flex-1 rounded-full bg-secondary py-4"
           >
             <Text className="text-center text-body text-neutral-900">
