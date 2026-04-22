@@ -61,16 +61,19 @@ module.exports = {
       spacing: {
         screen: "24px",
       },
+fontSize: {
+  display: ["36px", { lineHeight: "44px" }],
+  displayLg: ["40px", { lineHeight: "50px" }],
 
-      fontSize: {
-        h1: ["32px", { lineHeight: "40px", fontWeight: "700" }],
-        h2: ["24px", { lineHeight: "32px", fontWeight: "600" }],
-        h3: ["22px", { lineHeight: "30px", fontWeight: "600" }],
-        h4: ["20px", { lineHeight: "28px", fontWeight: "600" }],
-        body: ["16px", { lineHeight: "24px" }],
-        bodySm: ["14px", { lineHeight: "20px" }],
-        caption: ["12px", { lineHeight: "16px" }],
-      },
+  h1: ["32px", { lineHeight: "40px" }],
+  h2: ["24px", { lineHeight: "32px" }],
+  h3: ["22px", { lineHeight: "30px"}],
+  h4: ["20px", { lineHeight: "28px"}],
+
+  body: ["16px", { lineHeight: "24px" }],
+  bodySm: ["14px", { lineHeight: "20px" }],
+  caption: ["12px", { lineHeight: "16px" }],
+},
     },
   },
   plugins: [],

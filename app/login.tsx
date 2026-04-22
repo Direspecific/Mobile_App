@@ -26,11 +26,13 @@ export default function LoginScreen() {
 
       <AuthHeader
         title="Welcome Back"
+        variant="login"
         subtitleLines={[
           "Sign in to access your dashboard and",
           "manage voter registrations",
-        ]}
-      />
+     ]}
+      subtitleSpacingClassName="mt-20"
+/>
 
       <View className="mt-4">
         <AppInput
@@ -66,7 +68,7 @@ export default function LoginScreen() {
         </Pressable>
       </View>
 
-      <AppButton title="Sign in" onPress={handleLogin} className="mt-5" />
+      <AppButton title="Sign In" onPress={handleLogin} className="mt-5" />
 
       <View className="my-5 flex-row items-center">
         <View className="h-px flex-1 bg-neutral-300" />
@@ -82,9 +84,9 @@ export default function LoginScreen() {
       />
 
       <AuthFooter
-        text="Don't have an Account?"
-        actionText="Create Account?"
-        onPress={() => router.push("/onboarding_3")}
+        text="Don't have an account?"
+        actionText="Create Account"
+        onPress={() => router.push("/register")}
       />
     </AuthScreenWrapper>
   );

@@ -63,7 +63,7 @@ export default function AppInput({
         )}
       </View>
 
-      {!!error && <Text className="mt-1 text-caption text-error">{error}</Text>}
+      
     </View>
   );
 }
