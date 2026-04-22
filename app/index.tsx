@@ -29,13 +29,14 @@ export default function Index() {
           </Text>
 
           <View className="mt-10 flex-row items-center">
-            <View className="h-4 w-12 rounded-full bg-primary" />
+            <View className="mx-5 h-4 w-12 rounded-full bg-primary" />
+
             <Pressable onPress={() => router.push("/onboarding_2")}>
-              <View className="ml-6 h-4 w-4 rounded-full bg-neutral-300" />
+              <View className="mx-5 h-4 w-4 rounded-full bg-neutral-300" />
             </Pressable>
 
             <Pressable onPress={() => router.push("/onboarding_3")}>
-              <View className="ml-6 h-4 w-4 rounded-full bg-neutral-300" />
+              <View className="mx-5 h-4 w-4 rounded-full bg-neutral-300" />
             </Pressable>
           </View>
         </View>
