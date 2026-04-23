@@ -2,9 +2,9 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 
-import AuthHeader from "@/components/auth/AuthHeader";
 import AuthLayout from "@/components/auth/AuthLayout";
 import LoginForm from "@/components/auth/LoginForm";
+import AuthHeader from "@/components/ui/Header";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");

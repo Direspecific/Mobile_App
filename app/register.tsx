@@ -2,9 +2,9 @@ import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 
-import AuthHeader from "@/components/auth/AuthHeader";
 import AuthScreenWrapper from "@/components/auth/AuthLayout";
 import AuthForm from "@/components/auth/RegistrationForm";
+import AuthHeader from "@/components/ui/Header";
 
 export default function RegisterScreen() {
   const [fullName, setFullName] = useState("");
