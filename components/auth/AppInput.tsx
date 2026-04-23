@@ -43,7 +43,7 @@ export default function AppInput({
         <TextInput
           className={`ml-3 flex-1 text-base text-neutral-900 ${className}`}
           secureTextEntry={shouldHidePassword}
-          placeholderTextColor="#949CA3"
+          placeholderTextColor="neutral-500"
           multiline={false}
           scrollEnabled={false}
           {...props}
