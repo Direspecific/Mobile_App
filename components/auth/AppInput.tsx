@@ -24,7 +24,7 @@ export default function AppInput({
   const shouldHidePassword = isPassword ? !showPassword : secureTextEntry;
 
   return (
-    <View className="mb-4">
+    <View className="mb-2">
       <Text className="mb-2 text-bodySm text-neutral-600">{label}</Text>
 
       <View

@@ -25,7 +25,7 @@ export default function AuthHeader({
 }: AuthHeaderProps) {
   const isLogin = variant === "login";
   const isRegister = variant === "register";
-
+  
   return (
     <View className="px-1">
       <View className="items-center -mt-2">
