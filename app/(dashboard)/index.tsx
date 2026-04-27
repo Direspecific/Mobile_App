@@ -42,10 +42,26 @@ export default function Home() {
       <StatusCard
         logo={logo}
         status="Primary Election"
-        label=""
-        footer="Registration open Until April 25, 2026"
+        label="Election Status"
+        footer="Election starts at April 25, 2026"
         variant="pending"
       />
+
+      <Text className="pl-4 text-lg font-bold">
+        View Status
+      </Text>
+
+      <View className="flex-row px-6 mt-4 gap-4">
+        <View className="flex-1 border p-8 rounded-xl items-center justify-center">
+          <Image source={logo} className="w-12 h-12 rounded-lg mb-2 border"/>
+          <Text className="text-center">Update Profile</Text>
+        </View>
+
+        <View className="flex-1 border p-8 rounded-xl items-center justify-center">
+          <Image source={logo} className="w-12 h-12 rounded-lg mb-2 border"/>
+          <Text className="text-center">View Status</Text>
+        </View>
+      </View>
 
     </ScrollView>
   );
