@@ -1,0 +1,56 @@
+.login-btn {
+  width: 100%;
+  padding: 0.78rem 1rem;
+  background: linear-gradient(90deg, #5b6dcd 0%, #7b8de0 100%);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background 0.22s, box-shadow 0.22s, transform 0.12s;
+  box-shadow: 0 2px 12px 0 rgba(91,109,205,0.22);
+  position: relative;
+  overflow: hidden;
+  margin-top: 0.2rem;
+}
+
+.login-btn:hover:not(:disabled) {
+  background: linear-gradient(90deg, #4a5bbf 0%, #6a7cd6 100%);
+  box-shadow: 0 4px 20px 0 rgba(91,109,205,0.32);
+  transform: translateY(-1px);
+}
+
+.login-btn:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 1px 6px 0 rgba(91,109,205,0.16);
+}
+
+.login-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.login-btn--loading {
+  pointer-events: none;
+}
+
+.login-btn__spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

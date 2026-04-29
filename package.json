@@ -1,6 +1,19 @@
 {
   "name": "mobile_app",
   "version": "1.0.0",
+  "private": true,
+  "description": "",
+  "homepage": "https://github.com/Direspecific/Mobile_App#readme",
+  "bugs": {
+    "url": "https://github.com/Direspecific/Mobile_App/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Direspecific/Mobile_App.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
   "main": "index.ts",
   "scripts": {
     "start": "expo start",
@@ -17,6 +30,5 @@
   "devDependencies": {
     "@types/react": "~19.1.0",
     "typescript": "~5.9.2"
-  },
-  "private": true
+  }
 }
