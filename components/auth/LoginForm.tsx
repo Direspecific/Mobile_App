@@ -78,7 +78,7 @@ export default function LoginForm({
 
       <SocialButton
         title="Sign in with Google"
-        imageSource={require("../../assets/images/google_logo.png")}
+        imageSource={require("../../assets/images/google-logo.png")}
       />
 
       <View className="mt-6 flex-row items-center justify-center gap-1">
