@@ -1,9 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { router } from "expo-router";
 import ProfileCard from "./components/ProfileCard";
 import SettingsRow from "./components/SettingRow";
 
@@ -13,7 +13,7 @@ type SectionTitleProps = {
 
 function SectionTitle({ title }: SectionTitleProps) {
   return (
-    <Text className="mb-3 mt-5 text-body uppercase text-neutral">
+    <Text className="mb-3 mt-5 text-body uppercase text-neutral-600">
       {title}
     </Text>
   );
@@ -44,12 +44,13 @@ export default function Settings() {
           </View>
 
           <Pressable className="active:opacity-70">
-            <Ionicons name="log-out-outline" size={35} />
+            <Ionicons name="log-out-outline" size={35} color="#1A1A1A" />
           </Pressable>
         </View>
 
-        <Pressable className="active:opacity-70"
-        onPress={() => router.push("/profile")}
+        <Pressable
+          className="active:opacity-70"
+          onPress={() => router.push("/profile")}
         >
           <ProfileCard />
         </Pressable>

@@ -13,7 +13,7 @@ module.exports = {
           light: "#4b71ee",
           soft: "#a0b1ec",
           muted: "#95A7F3",
-          pale: "#C0C7F8",
+          pale: "#dee1f7",
         },
 
         secondary: {

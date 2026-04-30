@@ -1,7 +1,7 @@
-import { Tabs } from "expo-router";
-import React, { ComponentProps, useRef, useEffect } from "react";
-import { View, Text, TouchableOpacity, Animated, useWindowDimensions } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Tabs } from "expo-router";
+import React, { ComponentProps, useEffect, useRef } from "react";
+import { Animated, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type IconName = ComponentProps<typeof Ionicons>["name"];
@@ -104,5 +104,6 @@ export default function TabLayout() {
       <Tabs.Screen name="status" options={{ title: "Status" }} />
       <Tabs.Screen name="settings" options={{ title: "Settings" }} />
     </Tabs>
+    
   );
 }

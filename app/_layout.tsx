@@ -11,7 +11,9 @@ export default function RootLayout() {
           headerShown: false,
           animation: "fade",
         }}
+        
       />
     </>
+    
   );
 }
