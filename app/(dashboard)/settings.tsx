@@ -5,7 +5,10 @@ import React, { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import LogoutModal from "./components/LogoutModal"; // Assuming you have this component
+import LogoutModal from "./components/LogoutModal";
+import NotificationModal, {
+  NotificationSettings,
+} from "./components/NotificationModal";
 import ProfileCard from "./components/ProfileCard";
 import SettingsRow from "./components/SettingRow";
 
@@ -22,12 +25,23 @@ function SectionTitle({ title }: SectionTitleProps) {
 }
 
 export default function Settings() {
-  const [logoutVisible, setLogoutVisible] = useState(false); // State for modal visibility
+  const [logoutVisible, setLogoutVisible] = useState(false);
+  const [notifVisible, setNotifVisible] = useState(false);
+
+  const [notifSettings, setNotifSettings] = useState<NotificationSettings>({
+    push: true,
+    email: false,
+    sms: false,
+  });
 
   const handleLogout = () => {
-    setLogoutVisible(false); 
-    
-    /*router.replace("/login");*/ 
+    setLogoutVisible(false);
+    /* router.replace("/login"); */
+  };
+
+  const handleSaveNotifications = (settings: NotificationSettings) => {
+    setNotifSettings(settings);
+    console.log("Saved notification settings:", settings);
   };
 
   return (
@@ -45,12 +59,13 @@ export default function Settings() {
         <View className="ml-3 mt-4 flex-row items-start justify-between">
           <View>
             <Text className="text-h2 font-bold text-neutral-900">Settings</Text>
-            <Text className="text-body text-neutral-600">Manage your preferences</Text>
+            <Text className="text-body text-neutral-600">
+              Manage your preferences
+            </Text>
           </View>
 
-          
           <Pressable
-            onPress={() => setLogoutVisible(true)} // Show the modal when pressed
+            onPress={() => setLogoutVisible(true)}
             className="active:opacity-70"
           >
             <Ionicons name="log-out-outline" size={35} color="#E4221F" />
@@ -70,6 +85,7 @@ export default function Settings() {
           icon="notifications-outline"
           title="Notifications"
           iconBgClass="bg-secondary"
+          onPress={() => setNotifVisible(true)}
         />
 
         <SettingsRow
@@ -100,11 +116,17 @@ export default function Settings() {
         />
       </ScrollView>
 
-      
       <LogoutModal
         visible={logoutVisible}
-        onCancel={() => setLogoutVisible(false)} 
-        onLogout={handleLogout} 
+        onCancel={() => setLogoutVisible(false)}
+        onLogout={handleLogout}
+      />
+
+      <NotificationModal
+        visible={notifVisible}
+        onClose={() => setNotifVisible(false)}
+        onSave={handleSaveNotifications}
+        initialValues={notifSettings}
       />
     </SafeAreaView>
   );

@@ -9,6 +9,7 @@ type Props = {
   title: string;
   rightText?: string;
   iconBgClass?: string;
+  onPress?: () => void;
 };
 
 export default function SettingsRow({
@@ -16,9 +17,13 @@ export default function SettingsRow({
   title,
   rightText,
   iconBgClass = "bg-primary",
+  onPress,
 }: Props) {
   return (
-    <Pressable className="mb-3 flex-row items-center rounded-card border border-border bg-surface px-4 py-4 shadow-sm active:opacity-80">
+    <Pressable
+      onPress={onPress}
+      className="mb-3 flex-row items-center rounded-card border border-border bg-surface px-4 py-4 shadow-sm active:opacity-80"
+    >
       <View
         className={`mr-4 h-11 w-11 items-center justify-center rounded-button ${iconBgClass}`}
       >

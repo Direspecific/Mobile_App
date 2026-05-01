@@ -48,7 +48,7 @@ module.exports = {
         },
 
         background: "#F5F5F5",
-        surface: "#FFFFFF",
+        surface: "#ffffff",
         border: "#E5E7EB",
       },
 
