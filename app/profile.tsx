@@ -1,27 +1,49 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { Pressable, Text, View } from "react-native";
+import React, { useState } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 type ProfileInfoProps = {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   value: string;
+  editable: boolean;
+  onChangeText: (text: string) => void;
+  keyboardType?: "default" | "email-address" | "phone-pad";
 };
 
-function ProfileInfo({ icon, label, value }: ProfileInfoProps) {
+function ProfileInfo({
+  icon,
+  label,
+  value,
+  editable,
+  onChangeText,
+  keyboardType = "default",
+}: ProfileInfoProps) {
   return (
-    <View className="mb-3 min-h-[72px] flex-row items-center rounded-card border border-border bg-surface shadow-sm px-4 py-3">
-      <View className="mr-4 h-10 w-10 items-center justify-center rounded-full bg-primary-pale">
-        <Ionicons name={icon} size={20} color="#1449E8" />
+    <View className="mb-3 min-h-[72px] flex-row items-center rounded-card border border-border bg-surface px-4 py-3 shadow-sm">
+      <View className="mr-4 h-10 w-10 items-center justify-center">
+        <Ionicons name={icon} size={20} color="#BFC6CC" />
       </View>
 
       <View className="flex-1">
         <Text className="text-caption text-neutral-500">{label}</Text>
-        <Text className="text-bodySm font-semibold text-neutral-900">
-          {value}
-        </Text>
+
+        {editable ? (
+          <TextInput
+            value={value}
+            onChangeText={onChangeText}
+            keyboardType={keyboardType}
+            className="mt-1 rounded-lg border border-border px-3 py-1 text-bodySm font-semibold text-neutral-900"
+            placeholder={`Enter ${label}`}
+          />
+        ) : (
+          <Text className="text-bodySm font-semibold text-neutral-900">
+            {value}
+          </Text>
+        )}
       </View>
     </View>
   );
@@ -30,13 +52,38 @@ function ProfileInfo({ icon, label, value }: ProfileInfoProps) {
 export default function Profile() {
   const insets = useSafeAreaInsets();
 
+  const [isEditing, setIsEditing] = useState(false); // Track edit mode
+
+  const [profile, setProfile] = useState({
+    fullName: "C8nnect",
+    email: "helloC8nnect@gmail.com",
+    phone: "+63 912 345 6789",
+    dateOfBirth: "January 01, 2000",
+    address: "General Santos City, Philippines",
+  });
+
+  const updateProfile = (field: keyof typeof profile, value: string) => {
+    setProfile((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleEditSave = () => {
+    if (isEditing) {
+      console.log("Saved profile:", profile);
+    
+    }
+
+    setIsEditing(!isEditing); 
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <StatusBar style="dark" />
 
-      {/* Fixed Content */}
       <View className="flex-1 px-4 pb-24">
-        {/* Header */}
+       
         <View className="mt-4">
           <Text className="ml-3 text-h2 font-bold text-neutral-900">
             My Profile
@@ -53,49 +100,60 @@ export default function Profile() {
           </View>
 
           <Text className="mt-2 text-h3 font-bold text-neutral-900">
-            C8nnect
+            {profile.fullName}
           </Text>
 
-          {/* account status */}
-          <View className="mt-2 flex-row items-center  px-3 py-1">
-            <Ionicons name="ellipse" size={15} color="#00C04C"/>
+          <View className="mt-2 flex-row items-center px-3 py-1">
+            <Ionicons name="ellipse" size={15} color="#00C04C" />
 
-            <Text className="ml-1 text-caption font-semibold text-success">
+            <Text className="ml-1 text-caption text-success">
               Verified Account
             </Text>
           </View>
         </View>
 
-        {/* Profile Details */}
+       
         <View className="mt-4">
           <ProfileInfo
             icon="person-outline"
             label="Full Name"
-            value="C8nnect"
+            value={profile.fullName}
+            editable={isEditing}
+            onChangeText={(text) => updateProfile("fullName", text)}
           />
 
           <ProfileInfo
             icon="mail-outline"
             label="Email"
-            value="helloC8nnect@gmail.com"
+            value={profile.email}
+            editable={isEditing}
+            keyboardType="email-address"
+            onChangeText={(text) => updateProfile("email", text)}
           />
 
           <ProfileInfo
             icon="call-outline"
             label="Phone Number"
-            value="+63 912 345 6789"
+            value={profile.phone}
+            editable={isEditing}
+            keyboardType="phone-pad"
+            onChangeText={(text) => updateProfile("phone", text)}
           />
 
           <ProfileInfo
             icon="calendar-outline"
             label="Date of Birth"
-            value="January 01, 2000"
+            value={profile.dateOfBirth}
+            editable={isEditing}
+            onChangeText={(text) => updateProfile("dateOfBirth", text)}
           />
 
           <ProfileInfo
             icon="location-outline"
             label="Address"
-            value="General Santos City, Philippines"
+            value={profile.address}
+            editable={isEditing}
+            onChangeText={(text) => updateProfile("address", text)}
           />
         </View>
       </View>
@@ -111,9 +169,12 @@ export default function Profile() {
           <Ionicons name="chevron-back" size={22} color="white" />
         </Pressable>
 
-        <Pressable className="ml-3 h-12 flex-1 items-center justify-center rounded-full bg-primary active:opacity-80">
+        <Pressable
+          onPress={handleEditSave}
+          className="ml-3 h-12 flex-1 items-center justify-center rounded-full bg-primary active:opacity-80"
+        >
           <Text className="text-bodySm font-bold text-white">
-            Edit Profile
+            {isEditing ? "Save Profile" : "Edit Profile"}
           </Text>
         </Pressable>
       </View>
