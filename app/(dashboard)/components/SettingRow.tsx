@@ -22,7 +22,7 @@ export default function SettingsRow({
   return (
     <Pressable
       onPress={onPress}
-      className="mb-3 flex-row items-center rounded-card border border-border bg-surface px-4 py-4 shadow-sm active:opacity-80"
+      className="mb-2 flex-row items-center rounded-card border border-border bg-surface px-4 py-3 shadow-sm active:opacity-80"
     >
       <View
         className={`mr-4 h-11 w-11 items-center justify-center rounded-button ${iconBgClass}`}

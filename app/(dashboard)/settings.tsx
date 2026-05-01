@@ -5,10 +5,15 @@ import React, { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import ChangePasswordModal from "./components/ChangePassword";
 import LogoutModal from "./components/LogoutModal";
 import NotificationModal, {
   NotificationSettings,
 } from "./components/NotificationModal";
+import PrivacyModal, {
+  PrivacySettings,
+} from "./components/PrivacyAndSecurity";
+
 import ProfileCard from "./components/ProfileCard";
 import SettingsRow from "./components/SettingRow";
 
@@ -18,7 +23,7 @@ type SectionTitleProps = {
 
 function SectionTitle({ title }: SectionTitleProps) {
   return (
-    <Text className="mb-3 mt-5 text-body uppercase text-neutral-600">
+    <Text className="mb-3 my-4 text-body uppercase text-neutral-600">
       {title}
     </Text>
   );
@@ -27,6 +32,8 @@ function SectionTitle({ title }: SectionTitleProps) {
 export default function Settings() {
   const [logoutVisible, setLogoutVisible] = useState(false);
   const [notifVisible, setNotifVisible] = useState(false);
+  const [privacyVisible, setPrivacyVisible] = useState(false);
+  const [changePasswordVisible, setChangePasswordVisible] = useState(false); // State for the Change Password modal
 
   const [notifSettings, setNotifSettings] = useState<NotificationSettings>({
     push: true,
@@ -34,14 +41,29 @@ export default function Settings() {
     sms: false,
   });
 
+  const [privacySettings, setPrivacySettings] = useState<PrivacySettings>({
+    biometric: false,
+    faceID: false,
+  });
+
   const handleLogout = () => {
     setLogoutVisible(false);
-    /* router.replace("/login"); */
+    // router.replace("/login"); // Uncomment if you want to navigate after logout
   };
 
   const handleSaveNotifications = (settings: NotificationSettings) => {
     setNotifSettings(settings);
     console.log("Saved notification settings:", settings);
+  };
+
+  const handleSavePrivacy = (settings: PrivacySettings) => {
+    setPrivacySettings(settings);
+    console.log("Saved privacy settings:", settings);
+  };
+
+  const handleSavePassword = (newPassword: string) => {
+    console.log("New password saved:", newPassword);
+    // Implement password change logic here 
   };
 
   return (
@@ -92,6 +114,14 @@ export default function Settings() {
           icon="lock-closed-outline"
           title="Privacy & Security"
           iconBgClass="bg-primary"
+          onPress={() => setPrivacyVisible(true)}
+        />
+
+        <SettingsRow
+          icon="key-outline"
+          title="Change Password"
+          iconBgClass="bg-primary"
+          onPress={() => setChangePasswordVisible(true)} 
         />
 
         <SettingsRow
@@ -127,6 +157,19 @@ export default function Settings() {
         onClose={() => setNotifVisible(false)}
         onSave={handleSaveNotifications}
         initialValues={notifSettings}
+      />
+
+      <PrivacyModal
+        visible={privacyVisible}
+        onClose={() => setPrivacyVisible(false)}
+        onSave={handleSavePrivacy}
+        initialValues={privacySettings}
+      />
+
+      <ChangePasswordModal
+        visible={changePasswordVisible} 
+        onClose={() => setChangePasswordVisible(false)} 
+        onSave={handleSavePassword} 
       />
     </SafeAreaView>
   );

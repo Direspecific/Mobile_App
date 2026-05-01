@@ -1,59 +1,23 @@
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Pressable,
-  Switch,
-  Text,
-  View,
-} from "react-native";
+import { Modal, Pressable, Text, View } from "react-native";
 
+// Import the SettingToggleCard component
+import SettingToggleCard from "./SettingToggleCard";
+
+// Type for notification settings
 export type NotificationSettings = {
   push: boolean;
   email: boolean;
   sms: boolean;
 };
 
+// Prop types for the modal component
 type NotificationModalProps = {
   visible: boolean;
   onClose: () => void;
   onSave: (settings: NotificationSettings) => void;
   initialValues?: NotificationSettings;
 };
-
-type NotificationRowProps = {
-  title: string;
-  subtitle: string;
-  value: boolean;
-  onValueChange: (value: boolean) => void;
-};
-
-function NotificationRow({
-  title,
-  subtitle,
-  value,
-  onValueChange,
-}: NotificationRowProps) {
-  return (
-    <View className="mb-3 flex-row items-center rounded-[18px] border border-border bg-white px-4 py-4">
-      <View className="flex-1 pr-3">
-        <Text className="text-bodySm font-semibold text-neutral-900">
-          {title}
-        </Text>
-        <Text className="mt-1 text-caption text-neutral-500">
-          {subtitle}
-        </Text>
-      </View>
-
-      <Switch
-        value={value}
-        onValueChange={onValueChange}
-        trackColor={{ false: "#E5E7EB", true: "#AFC3FF" }}
-        thumbColor={value ? "#1449E8" : "#F9FAFB"}
-        ios_backgroundColor="#E5E7EB"
-      />
-    </View>
-  );
-}
 
 export default function NotificationModal({
   visible,
@@ -67,11 +31,13 @@ export default function NotificationModal({
 }: NotificationModalProps) {
   const [settings, setSettings] = useState<NotificationSettings>(initialValues);
 
+  // Sync settings when the modal visibility changes
   useEffect(() => {
     if (visible) {
       setSettings(initialValues);
     }
   }, [visible, initialValues]);
+
 
   const handleSave = () => {
     onSave(settings);
@@ -95,7 +61,8 @@ export default function NotificationModal({
             Notifications
           </Text>
 
-          <NotificationRow
+         
+          <SettingToggleCard
             title="Push Notification"
             subtitle="Alerts on your device"
             value={settings.push}
@@ -104,7 +71,7 @@ export default function NotificationModal({
             }
           />
 
-          <NotificationRow
+          <SettingToggleCard
             title="Email Notification"
             subtitle="Updates to your inbox"
             value={settings.email}
@@ -113,7 +80,7 @@ export default function NotificationModal({
             }
           />
 
-          <NotificationRow
+          <SettingToggleCard
             title="SMS Alert"
             subtitle="Text message alerts"
             value={settings.sms}
@@ -122,6 +89,7 @@ export default function NotificationModal({
             }
           />
 
+        
           <Pressable
             onPress={handleSave}
             className="mt-4 items-center rounded-full bg-primary py-4 active:opacity-80"
