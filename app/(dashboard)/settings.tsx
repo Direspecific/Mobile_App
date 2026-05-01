@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import React, { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import LogoutModal from "./components/LogoutModal"; // Assuming you have this component
 import ProfileCard from "./components/ProfileCard";
 import SettingsRow from "./components/SettingRow";
 
@@ -20,6 +22,14 @@ function SectionTitle({ title }: SectionTitleProps) {
 }
 
 export default function Settings() {
+  const [logoutVisible, setLogoutVisible] = useState(false); // State for modal visibility
+
+  const handleLogout = () => {
+    setLogoutVisible(false); 
+    
+    /*router.replace("/login");*/ 
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
       <StatusBar style="dark" />
@@ -34,17 +44,16 @@ export default function Settings() {
       >
         <View className="ml-3 mt-4 flex-row items-start justify-between">
           <View>
-            <Text className="text-h2 font-bold text-neutral-900">
-              Settings
-            </Text>
-
-            <Text className="text-body text-neutral-600">
-              Manage your preferences
-            </Text>
+            <Text className="text-h2 font-bold text-neutral-900">Settings</Text>
+            <Text className="text-body text-neutral-600">Manage your preferences</Text>
           </View>
 
-          <Pressable className="active:opacity-70">
-            <Ionicons name="log-out-outline" size={35} color="#1A1A1A" />
+          
+          <Pressable
+            onPress={() => setLogoutVisible(true)} // Show the modal when pressed
+            className="active:opacity-70"
+          >
+            <Ionicons name="log-out-outline" size={35} color="#E4221F" />
           </Pressable>
         </View>
 
@@ -90,6 +99,13 @@ export default function Settings() {
           iconBgClass="bg-primary"
         />
       </ScrollView>
+
+      
+      <LogoutModal
+        visible={logoutVisible}
+        onCancel={() => setLogoutVisible(false)} 
+        onLogout={handleLogout} 
+      />
     </SafeAreaView>
   );
 }

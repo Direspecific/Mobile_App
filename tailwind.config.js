@@ -43,7 +43,7 @@ module.exports = {
 
         error: {
           DEFAULT: "#E4221F",
-          soft: "#FCEEEE",
+          soft: "#f19d9c",
           pale: "#FFF5F5",
         },
 
