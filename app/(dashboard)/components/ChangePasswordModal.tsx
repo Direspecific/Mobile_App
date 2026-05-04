@@ -45,6 +45,11 @@ export default function ChangePasswordModal({
 
           <Text className="ml-4 text-bodySm text-neutral-600 mb-2">New Password</Text>
           <View className="flex-row items-center border border-neutral-300 rounded-full px-4 py-1 mb-4">
+            <Ionicons
+              name="lock-closed-outline"
+              size={22}
+              color="#BFC6CC"
+            />
             <TextInput
               secureTextEntry={!isPasswordVisible}
               value={newPassword}
@@ -52,12 +57,17 @@ export default function ChangePasswordModal({
               className="flex-1"
             />
             <Pressable onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-              <Ionicons name={isPasswordVisible ? "eye-off-outline" : "eye-outline"} size={22} color="#BFC6CC" />
+              <Ionicons name={isPasswordVisible ? "eye-outline" : "eye-off-outline"} size={22} color="#BFC6CC" />
             </Pressable>
           </View>
 
           <Text className="ml-4 text-bodySm text-neutral-600 mb-2">Confirm Password</Text>
           <View className="flex-row items-center border border-neutral-300 rounded-full px-4 py-1 mb-6">
+            <Ionicons
+              name="lock-closed-outline"
+              size={22}
+              color="#BFC6CC"
+            />
             <TextInput
               secureTextEntry={!isConfirmPasswordVisible}
               value={confirmPassword}
@@ -65,7 +75,7 @@ export default function ChangePasswordModal({
               className="flex-1"
             />
             <Pressable onPress={() => setIsConfirmPasswordVisible(!isConfirmPasswordVisible)}>
-              <Ionicons name={isConfirmPasswordVisible ? "eye-off-outline" : "eye-outline"} size={22} color="#BFC6CC" />
+              <Ionicons name={isConfirmPasswordVisible ? "eye-outline" : "eye-off-outline"} size={22} color="#BFC6CC" />
             </Pressable>
           </View>
 

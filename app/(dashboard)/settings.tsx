@@ -5,7 +5,9 @@ import React, { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import ChangePasswordModal from "./components/ChangePassword";
+import ChangePasswordModal from "./components/ChangePasswordModal";
+import ContactComelecModal from "./components/ContactComelecModal";
+import LanguageModal from "./components/LanguageModal";
 import LogoutModal from "./components/LogoutModal";
 import NotificationModal, {
   NotificationSettings,
@@ -13,6 +15,7 @@ import NotificationModal, {
 import PrivacyModal, {
   PrivacySettings,
 } from "./components/PrivacyAndSecurity";
+import TermsConditionModal from "./components/TermsConditionsModal";
 
 import ProfileCard from "./components/ProfileCard";
 import SettingsRow from "./components/SettingRow";
@@ -34,6 +37,10 @@ export default function Settings() {
   const [notifVisible, setNotifVisible] = useState(false);
   const [privacyVisible, setPrivacyVisible] = useState(false);
   const [changePasswordVisible, setChangePasswordVisible] = useState(false); // State for the Change Password modal
+  const [languageVisible, setLanguageVisible] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [contactVisible, setContactVisible] = useState(false);
+  const [termsVisible, setTermsVisible] = useState(false);
 
   const [notifSettings, setNotifSettings] = useState<NotificationSettings>({
     push: true,
@@ -65,6 +72,10 @@ export default function Settings() {
     console.log("New password saved:", newPassword);
     // Implement password change logic here 
   };
+  const handleSelectLanguage = (language: string) => {
+  setSelectedLanguage(language);
+  console.log("Selected language:", language);
+};
 
   return (
     <SafeAreaView className="flex-1 bg-background" edges={["top"]}>
@@ -116,19 +127,13 @@ export default function Settings() {
           iconBgClass="bg-primary"
           onPress={() => setPrivacyVisible(true)}
         />
-
-        <SettingsRow
-          icon="key-outline"
-          title="Change Password"
-          iconBgClass="bg-primary"
-          onPress={() => setChangePasswordVisible(true)} 
-        />
-
+        
         <SettingsRow
           icon="globe-outline"
           title="Language"
-          rightText="English"
+          rightText={selectedLanguage}
           iconBgClass="bg-primary"
+          onPress={() => setLanguageVisible(true)}
         />
 
         <SectionTitle title="Support" />
@@ -137,12 +142,14 @@ export default function Settings() {
           icon="help-circle-outline"
           title="Contact Comelec"
           iconBgClass="bg-primary"
+          onPress={() => setContactVisible(true)}
         />
 
         <SettingsRow
           icon="document-text-outline"
           title="Terms & Condition"
           iconBgClass="bg-primary"
+          onPress={() => setTermsVisible(true)}
         />
       </ScrollView>
 
@@ -164,12 +171,31 @@ export default function Settings() {
         onClose={() => setPrivacyVisible(false)}
         onSave={handleSavePrivacy}
         initialValues={privacySettings}
+        onChangePasswordPress={() => {setChangePasswordVisible(true);
+        }}
       />
 
       <ChangePasswordModal
-        visible={changePasswordVisible} 
-        onClose={() => setChangePasswordVisible(false)} 
-        onSave={handleSavePassword} 
+        visible={changePasswordVisible}
+        onClose={() => setChangePasswordVisible(false)}
+        onSave={handleSavePassword}
+      />
+
+      <LanguageModal
+        visible={languageVisible}
+         onClose={() => setLanguageVisible(false)}
+        selectedLanguage={selectedLanguage}
+        onSelectLanguage={handleSelectLanguage}
+      />
+
+      <ContactComelecModal
+        visible={contactVisible}
+        onClose={() => setContactVisible(false)}
+      />
+
+      <TermsConditionModal
+        visible={termsVisible}
+        onClose={() => setTermsVisible(false)}
       />
     </SafeAreaView>
   );

@@ -8,19 +8,19 @@ export type PrivacySettings = {
   faceID: boolean;
 };
 
-
 type PrivacyModalProps = {
   visible: boolean;
   onClose: () => void;
   onSave: (settings: PrivacySettings) => void;
+  onChangePasswordPress: () => void;
   initialValues?: PrivacySettings;
 };
-
 
 export default function PrivacyModal({
   visible,
   onClose,
   onSave,
+  onChangePasswordPress,
   initialValues = {
     biometric: false,
     faceID: false,
@@ -28,17 +28,23 @@ export default function PrivacyModal({
 }: PrivacyModalProps) {
   const [settings, setSettings] = useState<PrivacySettings>(initialValues);
 
- 
   useEffect(() => {
     if (visible) {
       setSettings(initialValues);
     }
   }, [visible, initialValues]);
 
- 
   const handleSave = () => {
     onSave(settings);
     onClose();
+  };
+
+  const handleChangePassword = () => {
+    onClose();
+
+    setTimeout(() => {
+      onChangePasswordPress();
+    }, 250);
   };
 
   return (
@@ -58,7 +64,6 @@ export default function PrivacyModal({
             Privacy & Security
           </Text>
 
-         
           <SettingToggleCard
             title="Biometric ID"
             value={settings.biometric}
@@ -67,7 +72,6 @@ export default function PrivacyModal({
             }
           />
 
-         
           <SettingToggleCard
             title="Face ID"
             value={settings.faceID}
@@ -76,19 +80,15 @@ export default function PrivacyModal({
             }
           />
 
-          
           <Pressable
-            onPress={() => {
-              // password functionality 
-            }}
+            onPress={handleChangePassword}
             className="mt-4 items-center rounded-full border border-primary bg-muted py-3 active:opacity-80"
           >
-            <Text className="text-bodySm font-semibold border-error text-primary">
+            <Text className="text-bodySm font-semibold text-primary">
               Change Password
             </Text>
           </Pressable>
 
-        
           <Pressable
             onPress={handleSave}
             className="mt-auto items-center rounded-full bg-primary py-4 active:opacity-80"
