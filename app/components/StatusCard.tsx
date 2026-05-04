@@ -1,12 +1,20 @@
 import React from "react";
-import { View, Text, Image } from "react-native";
+import { View, Text } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useRegistration } from "@/context/RegistrationContext";
 
+type StatusColors = {
+  border?: string;
+  text?: string;
+  bg?: string;
+};
+
 type Props = {
-  logo: any;
   status?: string;
   label?: string;
   footer?: string;
+  colors?: StatusColors;
+  icon?: keyof typeof Ionicons.glyphMap;
 };
 
 const statusLabel = {
@@ -21,41 +29,45 @@ const colorMap = {
   approved:     { border: "#22c55e", text: "#22c55e", bg: "#f0fdf4" },
 };
 
-export default function StatusCard({ logo, status, label, footer }: Props) {
+const iconMap = {
+  unregistered: "alert-circle-outline",
+  pending: "time-outline",
+  approved: "checkmark-circle-outline",
+} as const;
+
+export default function StatusCard({ status, label, footer, colors: colorOverrides, icon }: Props) {
   const { status: registrationStatus } = useRegistration();
-  const colors = colorMap[registrationStatus];
+  const colors = { ...colorMap[registrationStatus], ...colorOverrides };
+  const resolvedIcon = icon ?? iconMap[registrationStatus];
 
   return (
-    <View style={{
-      borderWidth: 1,
-      borderColor: colors.border,
-      backgroundColor: colors.bg,
-      padding: 16,
-      marginHorizontal: 24,
-      marginVertical: 16,
-      gap: 16,
-      borderRadius: 12,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.2,
-      shadowRadius: 4,
-      elevation: 3,
-    }}>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Image source={logo} style={{ width: 48, height: 48, borderRadius: 8, marginRight: 24, borderWidth: 1, borderColor: "#e5e7eb" }} />
+    <View
+      className="mx-6 my-4 p-4 gap-4 rounded-xl shadow-md"
+      style={{
+        borderWidth: 1,
+        borderColor: colors.border,
+        backgroundColor: colors.bg,
+      }}
+    >
+      <View className="flex-row items-center">
+        {/* Icon circle */}
+        <View
+          className="w-12 h-12 rounded-lg items-center justify-center mr-6"
+          style={{ backgroundColor: colors.border + "22" }}
+        >
+          <Ionicons name={resolvedIcon} size={28} color={colors.text} />
+        </View>
+
         <View>
-          <Text style={{ color: colors.text, fontSize: 18, fontWeight: "bold" }}>
+          <Text className="text-lg font-bold" style={{ color: colors.text }}>
             {status ?? statusLabel[registrationStatus]}
           </Text>
-          <Text style={{ fontSize: 14, color: "#6b7280" }}>
-            {label}
-          </Text>
+          <Text className="text-sm text-gray-500">{label}</Text>
         </View>
       </View>
+
       {footer && (
-        <Text style={{ fontSize: 14, color: "#4b5563" }}>
-          {footer}
-        </Text>
+        <Text className="text-sm text-gray-600">{footer}</Text>
       )}
     </View>
   );

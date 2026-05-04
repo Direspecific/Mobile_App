@@ -6,6 +6,7 @@ import { useState } from "react";
 import { router } from "expo-router";
 import Checkbox from "./components/CheckBox";
 import { useRegistration } from "@/context/RegistrationContext";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function RegistrationForm() {
   const [citizenship, setCitizenship] = useState("");
@@ -18,14 +19,13 @@ export default function RegistrationForm() {
 
   return (
     <ScrollView className="flex-1 bg-orange-50" contentContainerStyle={{ paddingBottom: 48 }} keyboardShouldPersistTaps="handled">
-      <SafeAreaView className="flex-row items-center justify-between" edges={['top']}>
-        <View className="p-4">
-          <Text className="text-lg font-bold text-orange-500">
-            Register Voter
-          </Text>
-          <Text className="text-sm text-gray-500">
-            Add as new voter to the system
-          </Text>
+      <SafeAreaView className="flex-row items-center" edges={["top"]}>
+        <Pressable onPress={() => router.back()} className="p-4">
+          <Ionicons name="arrow-back" size={24} color="#6b7280" />
+        </Pressable>
+        <View>
+          <Text className="text-lg font-bold text-blue-500">Register Voter</Text>
+          <Text className="text-sm text-gray-500">Add as new voter to the system</Text>
         </View>
       </SafeAreaView>
 
@@ -158,12 +158,20 @@ export default function RegistrationForm() {
       </View>
 
       <Text className="p-4 text-lg font-bold">Parent's Name</Text>
-
       <View className="gap-3 mx-4">
-        <View className="gap-3">
-          <InputField label="Father's Name"/>
-          <InputField label="Mother's Name"/>
+        <Text className="text-sm font-semibold text-gray-500">Father</Text>
+        <View className="flex-row gap-3">
+          <InputField label="Last Name" />
+          <InputField label="First Name" />
         </View>
+        <InputField label="Middle Name" />
+
+        <Text className="text-sm font-semibold text-gray-500 mt-2">Mother</Text>
+        <View className="flex-row gap-3">
+          <InputField label="Last Name" />
+          <InputField label="First Name" />
+        </View>
+        <InputField label="Middle Name" />
       </View>
 
       <Text className="p-4 text-lg font-bold">Biometrics</Text>
@@ -173,10 +181,10 @@ export default function RegistrationForm() {
           setStatus("approved");
           router.push("/(dashboard)");
         }}
-        className="bg-orange-500 p-4 rounded-full mx-4 mt-4"
+        className="bg-blue-500 p-4 rounded-full mx-4 mt-4"
       >
         <Text className="text-white text-center font-semibold">
-          Register
+          Submit Registration
         </Text>
       </Pressable>
 
