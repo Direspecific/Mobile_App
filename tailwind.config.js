@@ -10,10 +10,10 @@ module.exports = {
       colors: {
         primary: {
           DEFAULT: "#1449E8",
-          light: "#3F68EB",
-          soft: "#6A88EF",
+          light: "#4b71ee",
+          soft: "#a0b1ec",
           muted: "#95A7F3",
-          pale: "#C0C7F8",
+          pale: "#dee1f7",
         },
 
         secondary: {
@@ -43,12 +43,12 @@ module.exports = {
 
         error: {
           DEFAULT: "#E4221F",
-          soft: "#FCEEEE",
+          soft: "#f19d9c",
           pale: "#FFF5F5",
         },
 
         background: "#F5F5F5",
-        surface: "#FFFFFF",
+        surface: "#ffffff",
         border: "#E5E7EB",
       },
 

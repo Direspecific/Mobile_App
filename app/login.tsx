@@ -68,7 +68,7 @@ export default function LoginScreen() {
         </Pressable>
       </View>
 
-      <AppButton title="Sign In" onPress={handleLogin} className="mt-5" />
+      <AppButton title="Sign In" onPress={() => router.push("./(dashboard)")} className="mt-5" />
 
       <View className="my-5 flex-row items-center">
         <View className="h-px flex-1 bg-neutral-300" />
