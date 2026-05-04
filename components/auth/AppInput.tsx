@@ -24,7 +24,7 @@ export default function AppInput({
   const shouldHidePassword = isPassword ? !showPassword : secureTextEntry;
 
   return (
-    <View className="mb-4">
+    <View className="mb-2">
       <Text className="mb-2 text-bodySm text-neutral-600">{label}</Text>
 
       <View
@@ -43,7 +43,7 @@ export default function AppInput({
         <TextInput
           className={`ml-3 flex-1 text-base text-neutral-900 ${className}`}
           secureTextEntry={shouldHidePassword}
-          placeholderTextColor="#949CA3"
+          placeholderTextColor="neutral-500"
           multiline={false}
           scrollEnabled={false}
           {...props}
