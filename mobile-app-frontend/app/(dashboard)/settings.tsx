@@ -55,7 +55,7 @@ export default function Settings() {
 
   const handleLogout = () => {
     setLogoutVisible(false);
-    // router.replace("/login"); // Uncomment if you want to navigate after logout
+    router.replace("/login"); 
   };
 
   const handleSaveNotifications = (settings: NotificationSettings) => {
