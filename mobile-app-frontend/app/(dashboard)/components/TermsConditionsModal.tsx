@@ -18,7 +18,7 @@ export default function TermsConditionModal({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View className="flex-1 justify-end bg-black/25">
+      <View className="flex-1 justify-end bg-white/25">
         <Pressable className="flex-1" onPress={onClose} />
 
         <View

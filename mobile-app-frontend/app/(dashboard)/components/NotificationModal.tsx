@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 
-// Import the SettingToggleCard component
+
 import SettingToggleCard from "./SettingToggleCard";
 
-// Type for notification settings
+
 export type NotificationSettings = {
   push: boolean;
   email: boolean;
   sms: boolean;
 };
 
-// Prop types for the modal component
+
 type NotificationModalProps = {
   visible: boolean;
   onClose: () => void;
@@ -31,7 +31,7 @@ export default function NotificationModal({
 }: NotificationModalProps) {
   const [settings, setSettings] = useState<NotificationSettings>(initialValues);
 
-  // Sync settings when the modal visibility changes
+
   useEffect(() => {
     if (visible) {
       setSettings(initialValues);
@@ -51,7 +51,7 @@ export default function NotificationModal({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View className="flex-1 bg-black/25 justify-end">
+      <View className="flex-1 bg-white/25 justify-end">
         <Pressable className="flex-1" onPress={onClose} />
 
         <View className="rounded-t-[28px] bg-[#F6F6F1] px-4 pb-6 pt-3">

@@ -36,7 +36,7 @@ export default function ChangePasswordModal({
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <View className="flex-1 bg-black/25 justify-end">
+      <View className="flex-1 bg-white/25 justify-end">
         <Pressable className="flex-1" onPress={onClose} />
         <View className="rounded-t-[28px] bg-[#F6F6F1] px-4 pb-6 pt-3">
           <View className="mb-4 self-center h-1.5 w-14 rounded-full bg-neutral-300" />

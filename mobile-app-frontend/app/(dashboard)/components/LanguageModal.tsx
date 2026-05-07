@@ -37,7 +37,7 @@ export default function LanguageModal({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View className="flex-1 justify-end bg-black/25">
+      <View className="flex-1 justify-end bg-white/25">
         <Pressable className="flex-1" onPress={onClose} />
 
         <View className="rounded-t-[28px] bg-[#F6F6F1] px-4 pb-5 pt-3">

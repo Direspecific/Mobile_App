@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
-
 import SettingToggleCard from "./SettingToggleCard";
 
 export type PrivacySettings = {
@@ -54,7 +53,7 @@ export default function PrivacyModal({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View className="flex-1 bg-black/25 justify-end">
+      <View className="flex-1 bg-white/25 justify-end">
         <Pressable className="flex-1" onPress={onClose} />
 
         <View className="min-h-[68%] rounded-t-[28px] bg-[#F6F6F1] px-4 pb-6 pt-3">
