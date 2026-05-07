@@ -1,16 +1,16 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 
-export default function RecaptchaBox() {
-  const [checked, setChecked] = useState(false);
+type RecaptchaBoxProps = {
+  checked: boolean;
+  onChange: (value: boolean) => void;
+};
 
+export default function RecaptchaBox({ checked, onChange }: RecaptchaBoxProps) {
   return (
     <View className="mt-1 flex-row items-center rounded-md border border-neutral-300 bg-surface px-4 py-3">
-      
-      {/* Only checkbox is clickable */}
       <Pressable
-        onPress={() => setChecked((prev) => !prev)}
+        onPress={() => onChange(!checked)}
         className="mr-3 active:opacity-70"
       >
         <MaterialCommunityIcons

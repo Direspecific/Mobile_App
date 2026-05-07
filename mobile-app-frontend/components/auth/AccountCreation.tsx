@@ -13,11 +13,13 @@ type RegisterFormProps = {
   phoneNumber: string;
   password: string;
   agreeTerms: boolean;
+  recaptchaChecked: boolean;
   onChangeFullName: (text: string) => void;
   onChangeEmail: (text: string) => void;
   onChangePhoneNumber: (text: string) => void;
   onChangePassword: (text: string) => void;
   onToggleTerms: () => void;
+  onChangeRecaptcha: (value: boolean) => void;
   onSubmit: () => void;
 };
 
@@ -27,11 +29,13 @@ export default function RegisterForm({
   phoneNumber,
   password,
   agreeTerms,
+  recaptchaChecked,
   onChangeFullName,
   onChangeEmail,
   onChangePhoneNumber,
   onChangePassword,
   onToggleTerms,
+  onChangeRecaptcha,
   onSubmit,
 }: RegisterFormProps) {
   const [showTermsModal, setShowTermsModal] = useState(false);
@@ -88,7 +92,10 @@ export default function RegisterForm({
         isPassword
       />
 
-      <RecaptchaBox />
+      <RecaptchaBox
+        checked={recaptchaChecked}
+        onChange={onChangeRecaptcha}
+      />
 
       <View className="mt-4 flex-row items-start">
         <Checkbox label="" checked={agreeTerms} onPress={handleCheckboxPress} />
