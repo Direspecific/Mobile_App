@@ -1,0 +1,123 @@
+/* Inherits all .login-card, .login-card__* styles from LoginCard.css via shared tokens */
+
+.reg-card {
+  width: 420px;
+  min-width: 300px;
+  gap: 1.25rem;
+}
+
+.reg-card__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.reg-card__title {
+  font-size: 1.45rem !important;
+  line-height: 1.25;
+  letter-spacing: 0.2em !important;
+}
+
+.reg-card__divider {
+  width: 100%;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--color-primary-light), transparent);
+  border-radius: 99px;
+  margin-bottom: 0.25rem;
+}
+
+/* Override submit button label — reuse login-btn base styles */
+.reg-card__submit {
+  width: 100%;
+  padding: 0.78rem 1rem;
+  background: linear-gradient(90deg, #5b6dcd 0%, #7b8de0 100%);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-body);
+  font-size: 0.97rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.22s, box-shadow 0.22s, transform 0.12s;
+  box-shadow: 0 2px 12px 0 rgba(91,109,205,0.22);
+  margin-top: 0.2rem;
+}
+
+.reg-card__submit:hover:not(:disabled) {
+  background: linear-gradient(90deg, #4a5bbf 0%, #6a7cd6 100%);
+  box-shadow: 0 4px 20px 0 rgba(91,109,205,0.32);
+  transform: translateY(-1px);
+}
+
+.reg-card__submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.reg-card__submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* Success state */
+.reg-card__success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.5rem 0 0.5rem;
+  animation: fadeSlideUp 0.45s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+.reg-card__success-icon {
+  width: 72px;
+  height: 72px;
+}
+
+.reg-card__success-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-text);
+  text-align: center;
+}
+
+.reg-card__success-body {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+.reg-card__back-btn {
+  margin-top: 0.5rem;
+  padding: 0.65rem 2rem;
+  background: linear-gradient(90deg, #5b6dcd 0%, #7b8de0 100%);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-btn);
+  font-family: var(--font-body);
+  font-size: 0.93rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.12s;
+  box-shadow: 0 2px 12px 0 rgba(91,109,205,0.22);
+}
+
+.reg-card__back-btn:hover {
+  background: linear-gradient(90deg, #4a5bbf 0%, #6a7cd6 100%);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .reg-card {
+    width: 100%;
+    max-width: 420px;
+  }
+}

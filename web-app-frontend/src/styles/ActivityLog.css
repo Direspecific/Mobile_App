@@ -1,0 +1,112 @@
+.activity-log {
+  background: #fff;
+  border: 1.5px solid var(--color-input-border);
+  border-radius: 1rem;
+  padding: 1.25rem 1.4rem;
+  animation: fadeSlideUp 0.55s cubic-bezier(.22,.68,0,1.2) both;
+  animation-delay: 0.2s;
+  overflow: hidden;
+}
+
+.activity-log__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.activity-log__title {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.activity-log__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.activity-log__th {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: left;
+  padding: 0.4rem 0.75rem 0.6rem;
+  border-bottom: 1.5px solid var(--color-input-border);
+  letter-spacing: 0.03em;
+}
+
+.activity-log__row {
+  animation: fadeSlideUp 0.4s cubic-bezier(.22,.68,0,1.2) both;
+  transition: background 0.15s;
+}
+
+.activity-log__row:hover {
+  background: rgba(91,109,205,0.04);
+}
+
+.activity-log__row:not(:last-child) td {
+  border-bottom: 1px solid rgba(197,202,233,0.5);
+}
+
+.activity-log__td {
+  padding: 0.75rem 0.75rem;
+  font-size: 0.83rem;
+  color: var(--color-text);
+  vertical-align: middle;
+}
+
+.activity-log__user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.activity-log__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.activity-log__name {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.activity-log__action {
+  color: var(--color-text-muted);
+}
+
+.activity-log__date {
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  font-size: 0.8rem;
+}
+
+.activity-log__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.28rem 0.9rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 80px;
+  letter-spacing: 0.02em;
+}
+
+.activity-log__badge--pending  { background: #fef3c7; color: #d97706; }
+.activity-log__badge--approved { background: #d1fae5; color: #059669; }
+.activity-log__badge--updated  { background: #dbeafe; color: #2563eb; }
+.activity-log__badge--rejected { background: #fee2e2; color: #dc2626; }
+

@@ -1,0 +1,95 @@
+.upcoming-election {
+  background: #fff;
+  border: 1.5px solid var(--color-input-border);
+  border-radius: 1rem;
+  padding: 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  flex: 1;
+  transition: box-shadow 0.22s, transform 0.18s;
+  animation: fadeSlideUp 0.5s cubic-bezier(.22,.68,0,1.2) both;
+  animation-delay: 0.08s;
+}
+
+.upcoming-election:hover {
+  box-shadow: 0 6px 24px rgba(91,109,205,0.1);
+  transform: translateY(-2px);
+}
+
+.upcoming-election__label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.upcoming-election__name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  letter-spacing: 0.04em;
+}
+
+.upcoming-election__date {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.upcoming-election__days-badge {
+  background: rgba(91,109,205,0.12);
+  color: var(--color-primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+  margin-left: 0.25rem;
+}
+
+.upcoming-election__progress-wrap {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.upcoming-election__progress-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.upcoming-election__progress-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+.upcoming-election__progress-pct {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.upcoming-election__progress-track {
+  width: 100%;
+  height: 7px;
+  background: var(--color-input-bg);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.upcoming-election__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5b6dcd, #7b8de0);
+  border-radius: 99px;
+  transition: width 1s cubic-bezier(.4,0,.2,1);
+}
+
+.upcoming-election__progress-sub {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
