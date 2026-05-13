@@ -22,7 +22,7 @@ export default function LogoutModal({
 
      
           <Text className="mt-4 text-center text-body text-gray-500">
-            You're about to log out of this device.
+            You are about to log out of this device.
           </Text>
 
        

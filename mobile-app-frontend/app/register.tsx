@@ -1,10 +1,13 @@
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
+import { Alert } from "react-native";
 
 import AuthForm from "@/components/auth/AccountCreation";
 import AuthScreenWrapper from "@/components/auth/AuthLayout";
 import AuthHeader from "@/components/ui/Header";
+import { useRegistration } from "@/context/RegistrationContext";
+import { registerAccount } from "@/services/api";
 
 export default function RegisterScreen() {
   const [fullName, setFullName] = useState("");
@@ -12,10 +15,41 @@ export default function RegisterScreen() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { setUser, setStatus } = useRegistration();
 
-  const handleRegister = () => {
-    // backend - validation / API / OTP logic here
-    router.push("/verification");
+  const handleRegister = async () => {
+    if (!fullName.trim() || !email.trim() || !phoneNumber.trim() || !password) {
+      Alert.alert("Missing details", "Please complete all account fields.");
+      return;
+    }
+
+    if (!agreeTerms) {
+      Alert.alert("Terms required", "Please accept the terms before continuing.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const user = await registerAccount(email.trim(), password);
+
+      setUser({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      });
+      setStatus(user.status);
+
+      router.push("/verification");
+    } catch (error) {
+      Alert.alert(
+        "Registration failed",
+        error instanceof Error ? error.message : "Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,6 +75,7 @@ export default function RegisterScreen() {
         onChangePassword={setPassword}
         onToggleTerms={() => setAgreeTerms((prev) => !prev)}
         onSubmit={handleRegister}
+        loading={loading}
       />
     </AuthScreenWrapper>
   );

@@ -43,7 +43,7 @@ export default function Verification() {
         </Text>
 
         <Text className="mt-4 text-center text-bodySm leading-6 text-neutral-600">
-          We've sent a 6-digit code to your Email{"\n"}
+          We have sent a 6-digit code to your Email{"\n"}
           and Number. Enter it below.
         </Text>
 

@@ -15,6 +15,7 @@ type LoginFormProps = {
   onForgotPassword: () => void;
   onSubmit: () => void;
   onPressRegister: () => void;
+  loading?: boolean;
 };
 
 export default function LoginForm({
@@ -27,6 +28,7 @@ export default function LoginForm({
   onForgotPassword,
   onSubmit,
   onPressRegister,
+  loading = false,
 }: LoginFormProps) {
   return (
     <View className="mt-4">
@@ -65,6 +67,7 @@ export default function LoginForm({
       <AppButton
         title="Sign In"
         onPress={onSubmit}
+        loading={loading}
         className="mt-5"
       />
 
@@ -83,7 +86,7 @@ export default function LoginForm({
 
       <View className="mt-6 flex-row items-center justify-center gap-1">
         <Text className="text-caption text-neutral-500">
-          Don't have an account?
+          Do not have an account?
         </Text>
 
         <Pressable onPress={onPressRegister} hitSlop={5}>

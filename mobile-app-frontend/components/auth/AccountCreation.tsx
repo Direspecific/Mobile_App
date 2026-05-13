@@ -19,6 +19,7 @@ type RegisterFormProps = {
   onChangePassword: (text: string) => void;
   onToggleTerms: () => void;
   onSubmit: () => void;
+  loading?: boolean;
 };
 
 export default function RegisterForm({
@@ -33,6 +34,7 @@ export default function RegisterForm({
   onChangePassword,
   onToggleTerms,
   onSubmit,
+  loading = false,
 }: RegisterFormProps) {
   const [showTermsModal, setShowTermsModal] = useState(false);
 
@@ -114,6 +116,7 @@ export default function RegisterForm({
         title="Send OTP"
         onPress={onSubmit}
         disabled={!agreeTerms}
+        loading={loading}
         className={`mt-4 ${!agreeTerms ? "opacity-50" : ""}`}
       />
     </View>

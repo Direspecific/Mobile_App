@@ -1,5 +1,6 @@
 package com.example.voter.controller;
 
+import com.example.voter.dto.AuthResponse;
 import com.example.voter.dto.LoginRequest;
 import com.example.voter.dto.RegisterRequest;
 import com.example.voter.model.User;
@@ -22,7 +23,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+    public AuthResponse login(@RequestBody LoginRequest request) {
         return authService.login(request);
     }
 }

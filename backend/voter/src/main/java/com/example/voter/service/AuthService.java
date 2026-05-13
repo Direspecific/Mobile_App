@@ -1,5 +1,6 @@
 package com.example.voter.service;
 
+import com.example.voter.dto.AuthResponse;
 import com.example.voter.dto.LoginRequest;
 import com.example.voter.dto.RegisterRequest;
 import com.example.voter.model.Status;
@@ -41,8 +42,7 @@ public class AuthService {
         return userRepository.save(user);
     }
 
-    // NOW RETURNS JWT
-    public String login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request) {
 
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -51,6 +51,14 @@ public class AuthService {
             throw new RuntimeException("Invalid password");
         }
 
-        return jwtUtil.generateToken(user.getEmail(), user.getRole());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole());
+
+        return new AuthResponse(
+                token,
+                user.getId(),
+                user.getEmail(),
+                user.getRole(),
+                user.getStatus()
+        );
     }
 }
