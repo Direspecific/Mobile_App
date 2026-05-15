@@ -6,9 +6,11 @@ D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\controll
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\dto\AuthResponse.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\dto\LoginRequest.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\dto\RegisterRequest.java
+D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\dto\VerifyOtpRequest.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\dto\VoterRequest.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\model\Status.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\model\User.java
+D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\model\VerificationStatus.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\model\Voter.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\repository\UserRepository.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\repository\VoterRepository.java
@@ -16,6 +18,7 @@ D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\security
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\security\JwtUtil.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\service\AdminService.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\service\AuthService.java
+D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\service\EmailService.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\service\VoterService.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\utils\EmailSender.java
 D:\Code\Mobile_App-master\backend\voter\src\main\java\com\example\voter\utils\OTPGenerator.java

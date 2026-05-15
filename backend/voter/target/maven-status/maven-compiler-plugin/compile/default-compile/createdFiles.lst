@@ -13,6 +13,7 @@ com\example\voter\dto\LoginRequest.class
 com\example\voter\model\User.class
 com\example\voter\controller\AuthController.class
 com\example\voter\model\Voter.class
+com\example\voter\dto\AuthResponse.class
 com\example\voter\model\Voter$Biometrics.class
 com\example\voter\model\Voter$Parents.class
 com\example\voter\security\JwtFilter.class
