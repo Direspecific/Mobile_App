@@ -26,7 +26,7 @@ function AnimatedTabBar({ state, descriptors, navigation }: any) {
       tension: 60,
       friction: 10,
     }).start();
-  }, [state.index, tabWidth]);
+  }, [state.index, tabWidth, translateX]);
 
   return (
     <View

@@ -64,10 +64,6 @@ export default function TermsandAgreement({
             </Pressable>
           </View>
 
-          <Text className="mt-2 text-bodySm text-neutral-500">
-            Last updated April 24, 2026
-          </Text>
-
           <ScrollView
             className="mt-4 max-h-[420px]"
             showsVerticalScrollIndicator

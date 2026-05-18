@@ -18,7 +18,7 @@ export default function ForgotPasswordScreen() {
 
     router.push({
       pathname: "/verification",
-      params: { flow: "forgot-password" },
+      params: { flow: "forgot-password", email: email.trim() },
     });
   };
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { loginAccount } from "../services/api";
 import InputField from "./InputField";
 import CheckboxField from "./CheckboxField";
 import LoginButton from "./LoginButton";
@@ -18,15 +19,23 @@ const LoginCard: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    if (!email || !password) { setError("Please fill in all fields."); return; }
 
-    setLoading(true);
-    await new Promise((res) => setTimeout(res, 1200));
-    setLoading(false);
+    if (!email.trim() || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
 
-    // Demo: any credentials work — replace with real API call
-    login({ name: "C8nnect", email });
-    navigate("/dashboard");
+    try {
+      setLoading(true);
+      const response = await loginAccount(email.trim(), password);
+
+      login(response.token, response.user, rememberMe);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

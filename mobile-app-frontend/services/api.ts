@@ -72,6 +72,11 @@ export type VoterPayload = {
   };
 };
 
+export type VoterRegistration = VoterPayload & {
+  id: string;
+  userId: string;
+};
+
 const configuredApiUrl = process.env.EXPO_PUBLIC_API_URL;
 
 function getApiBaseUrl() {
@@ -132,12 +137,22 @@ async function apiRequest<T>(path: string, options: ApiOptions = {}): Promise<T>
   });
 
   const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
+  let data: unknown = null;
+
+  if (text) {
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = text;
+    }
+  }
 
   if (!response.ok) {
     const message =
       data && typeof data === "object" && "message" in data
         ? String(data.message)
+        : typeof data === "string"
+          ? data
         : "Request failed. Please try again.";
 
     throw new Error(message);
@@ -170,6 +185,22 @@ export async function loginAccount(email: string, password: string) {
   };
 }
 
+export function verifyOtp(email: string, otp: string) {
+  return apiRequest<string>("/api/auth/verify-otp", {
+    method: "POST",
+    body: { email, otp },
+  });
+}
+
+export function resendOtp(email: string) {
+  return apiRequest<string>(
+    `/api/auth/resend-otp?email=${encodeURIComponent(email)}`,
+    {
+      method: "POST",
+    },
+  );
+}
+
 export function createVoterRegistration(
   voter: VoterPayload,
   userId: string,
@@ -179,5 +210,11 @@ export function createVoterRegistration(
     method: "POST",
     token,
     body: { voter, userId },
+  });
+}
+
+export function getVoterRegistrationByUserId(userId: string, token: string) {
+  return apiRequest<VoterRegistration>(`/api/voters/user/${userId}`, {
+    token,
   });
 }

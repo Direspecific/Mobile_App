@@ -16,7 +16,7 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { setUser, setStatus } = useRegistration();
+  const { setUser, setStatus, setAccountProfile } = useRegistration();
 
   const handleRegister = async () => {
     if (!fullName.trim() || !email.trim() || !phoneNumber.trim() || !password) {
@@ -39,9 +39,16 @@ export default function RegisterScreen() {
         role: user.role,
         status: user.status,
       });
+      setAccountProfile({
+        fullName: fullName.trim(),
+        phone: phoneNumber.trim(),
+      });
       setStatus(user.status);
 
-      router.push("/verification");
+      router.push({
+        pathname: "/verification",
+        params: { email: user.email },
+      });
     } catch (error) {
       Alert.alert(
         "Registration failed",

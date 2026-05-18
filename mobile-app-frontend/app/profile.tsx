@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
+import { getVoterRegistrationByUserId } from "@/services/api";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRegistration } from "@/context/RegistrationContext";
 
 type ProfileInfoProps = {
   icon: keyof typeof Ionicons.glyphMap;
@@ -13,6 +15,50 @@ type ProfileInfoProps = {
   onChangeText: (text: string) => void;
   keyboardType?: "default" | "email-address" | "phone-pad";
 };
+
+type ProfileData = {
+  fullName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  address: string;
+};
+
+const emptyProfile: ProfileData = {
+  fullName: "",
+  email: "",
+  phone: "",
+  dateOfBirth: "",
+  address: "",
+};
+
+function formatFullName(parts: {
+  firstName?: string;
+  middleName?: string;
+  lastName?: string;
+  suffix?: string;
+}) {
+  return [parts.firstName, parts.middleName, parts.lastName, parts.suffix]
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
+function formatAddress(address?: {
+  street?: string;
+  barangay?: string;
+  city?: string;
+  province?: string;
+}) {
+  if (!address) {
+    return "";
+  }
+
+  return [address.street, address.barangay, address.city, address.province]
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(", ");
+}
 
 function ProfileInfo({
   icon,
@@ -51,16 +97,62 @@ function ProfileInfo({
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
+  const { accountProfile, token, user } = useRegistration();
 
   const [isEditing, setIsEditing] = useState(false); // Track edit mode
 
-  const [profile, setProfile] = useState({
-    fullName: "C8nnect",
-    email: "helloC8nnect@gmail.com",
-    phone: "+63 912 345 6789",
-    dateOfBirth: "January 01, 2000",
-    address: "General Santos City, Philippines",
-  });
+  const [profile, setProfile] = useState<ProfileData>(emptyProfile);
+
+  const accountProfileInfo = useMemo<ProfileData>(
+    () => ({
+      ...emptyProfile,
+      fullName: accountProfile?.fullName ?? "",
+      email: user?.email ?? "",
+      phone: accountProfile?.phone ?? "",
+    }),
+    [accountProfile, user],
+  );
+
+  useEffect(() => {
+    setProfile(accountProfileInfo);
+  }, [accountProfileInfo]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadVoterProfile() {
+      if (!user || !token) {
+        return;
+      }
+
+      try {
+        const voter = await getVoterRegistrationByUserId(user.id, token);
+
+        if (!isMounted) {
+          return;
+        }
+
+        setProfile((current) => ({
+          ...current,
+          fullName:
+            formatFullName(voter) || accountProfileInfo.fullName || current.fullName,
+          email: voter.email || accountProfileInfo.email || current.email,
+          dateOfBirth: voter.dateOfBirth || current.dateOfBirth,
+          address: formatAddress(voter.address) || current.address,
+        }));
+      } catch (error) {
+        if (__DEV__) {
+          console.warn("Could not load voter profile", error);
+        }
+      }
+    }
+
+    loadVoterProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [accountProfileInfo, token, user]);
 
   const updateProfile = (field: keyof typeof profile, value: string) => {
     setProfile((prev) => ({
@@ -70,11 +162,6 @@ export default function Profile() {
   };
 
   const handleEditSave = () => {
-    if (isEditing) {
-      console.log("Saved profile:", profile);
-    
-    }
-
     setIsEditing(!isEditing); 
   };
 
@@ -96,7 +183,9 @@ export default function Profile() {
 
         <View className="mt-4 items-center rounded-card border border-primary-muted bg-primary-pale p-5">
           <View className="h-20 w-20 items-center justify-center rounded-full bg-primary">
-            <Text className="text-h4 font-bold text-white">C8</Text>
+            <Text className="text-h4 font-bold text-white">
+              {(profile.fullName || profile.email || "U").slice(0, 2).toUpperCase()}
+            </Text>
           </View>
 
           <Text className="mt-2 text-h3 font-bold text-neutral-900">

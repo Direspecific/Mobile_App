@@ -39,6 +39,13 @@ public class VoterService {
                         new RuntimeException("Voter not found"));
     }
 
+    public Voter getByUserId(String userId) {
+
+        return voterRepository.findByUserId(userId)
+                .orElseThrow(() ->
+                        new RuntimeException("Voter not found"));
+    }
+
     // =========================
     // CREATE VOTER
     // =========================

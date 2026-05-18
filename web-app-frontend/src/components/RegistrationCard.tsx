@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { registerAccount } from "../services/api";
 import InputField from "./InputField";
 import "../styles/RegistrationCard.css";
 
@@ -42,10 +43,15 @@ const RegistrationCard: React.FC = () => {
       return;
     }
 
-    setLoading(true);
-    await new Promise((res) => setTimeout(res, 1400));
-    setLoading(false);
-    setSuccess(true);
+    try {
+      setLoading(true);
+      await registerAccount(form.email.trim(), form.password);
+      setSuccess(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (success) {

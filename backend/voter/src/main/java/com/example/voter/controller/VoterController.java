@@ -27,6 +27,11 @@ public class VoterController {
         return voterService.getById(id);
     }
 
+    @GetMapping("/user/{userId}")
+    public Voter getByUserId(@PathVariable String userId) {
+        return voterService.getByUserId(userId);
+    }
+
     @PostMapping
     public Voter create(@RequestBody VoterRequest request) {
         return voterService.create(

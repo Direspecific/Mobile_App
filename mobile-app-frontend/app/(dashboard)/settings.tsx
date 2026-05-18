@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { useRegistration } from "@/context/RegistrationContext";
 import ChangePasswordModal from "./components/ChangePasswordModal";
 import ContactComelecModal from "./components/ContactComelecModal";
 import LanguageModal from "./components/LanguageModal";
@@ -33,6 +34,7 @@ function SectionTitle({ title }: SectionTitleProps) {
 }
 
 export default function Settings() {
+  const { logout } = useRegistration();
   const [logoutVisible, setLogoutVisible] = useState(false);
   const [notifVisible, setNotifVisible] = useState(false);
   const [privacyVisible, setPrivacyVisible] = useState(false);
@@ -55,26 +57,23 @@ export default function Settings() {
 
   const handleLogout = () => {
     setLogoutVisible(false);
-    // router.replace("/login"); // Uncomment if you want to navigate after logout
+    logout();
+    router.replace("/login");
   };
 
   const handleSaveNotifications = (settings: NotificationSettings) => {
     setNotifSettings(settings);
-    console.log("Saved notification settings:", settings);
   };
 
   const handleSavePrivacy = (settings: PrivacySettings) => {
     setPrivacySettings(settings);
-    console.log("Saved privacy settings:", settings);
   };
 
-  const handleSavePassword = (newPassword: string) => {
-    console.log("New password saved:", newPassword);
+  const handleSavePassword = (_newPassword: string) => {
     // Implement password change logic here 
   };
   const handleSelectLanguage = (language: string) => {
   setSelectedLanguage(language);
-  console.log("Selected language:", language);
 };
 
   return (

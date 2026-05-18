@@ -46,10 +46,6 @@ export default function TermsConditionModal({
               Privacy Notice & Agreement
             </Text>
 
-            <Text className="mb-5 text-bodySm text-neutral-700">
-              Last updated April 24, 2026
-            </Text>
-
             <Text className="mb-5 text-bodySm leading-6 text-neutral-800">
               By creating an account and using the VOTELEC mobile application,
               you agree to this Privacy Notice and User Agreement. This explains

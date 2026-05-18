@@ -3,37 +3,39 @@ import ScreenWrapper from "../components/ScreenWrapper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StatusCard from "../components/StatusCard";
 import { Ionicons } from "@expo/vector-icons";
+import { useRegistration } from "@/context/RegistrationContext";
 
 type TimelineItem = {
   title: string;
-  date: string;
   description: string;
   completed: boolean;
 };
 
-const TIMELINE: TimelineItem[] = [
-  {
-    title: "Registration Submitted",
-    date: "April 15, 2026 at 10:30 AM",
-    description: "Your registration form has been submitted successfully",
-    completed: true,
-  },
-  {
-    title: "Documents Verified",
-    date: "April 16, 2026 at 3:00 PM",
-    description: "All required documents have been verified",
-    completed: true,
-  },
-  {
-    title: "Pending Approval",
-    date: "Awaiting",
-    description: "Your application is currently under review",
-    completed: false,
-  },
-];
-
 export default function Status() {
-  const logo = require("../../assets/images/favicon.png");
+  const { status } = useRegistration();
+  const timeline: TimelineItem[] = [
+    {
+      title: "Account Created",
+      description: "Your account is ready for voter registration.",
+      completed: true,
+    },
+    {
+      title: "Registration Submitted",
+      description:
+        status === "unregistered"
+          ? "Submit your voter registration form to continue."
+          : "Your voter registration form has been submitted.",
+      completed: status !== "unregistered",
+    },
+    {
+      title: "Application Approved",
+      description:
+        status === "approved"
+          ? "Your voter registration has been approved."
+          : "Your application will be reviewed after submission.",
+      completed: status === "approved",
+    },
+  ];
 
   return (
     <ScreenWrapper>
@@ -49,7 +51,13 @@ export default function Status() {
       <ScrollView className="flex-1" contentContainerStyle={{ paddingBottom: 48 }}>
         <StatusCard
           label="Current Status"
-          footer="Complete your registration to become eligible"
+          footer={
+            status === "unregistered"
+              ? "Complete your registration to become eligible."
+              : status === "pending"
+                ? "Your application is currently under review."
+                : "Your registration has been approved."
+          }
         />
 
         <Text className="pl-4 text-lg font-bold mb-2">
@@ -57,7 +65,7 @@ export default function Status() {
         </Text>
 
         <View className="px-4">
-          {TIMELINE.map((item, index) => (
+          {timeline.map((item, index) => (
             <View key={index} className="flex-row">
               {/* Left column - icon + line */}
               <View className="items-center mr-3">
@@ -72,7 +80,7 @@ export default function Status() {
                     color="#fff"
                   />
                 </View>
-                {index < TIMELINE.length - 1 && (
+                {index < timeline.length - 1 && (
                   <View className="w-0.5 flex-1 bg-gray-200 my-1" />
                 )}
               </View>
@@ -82,10 +90,6 @@ export default function Status() {
                 <Text className="text-sm font-semibold text-gray-800 mb-1">
                   {item.title}
                 </Text>
-                <View className="flex-row items-center mb-1.5 gap-1">
-                  <Ionicons name="calendar-outline" size={12} color="#9ca3af" />
-                  <Text className="text-xs text-gray-400">{item.date}</Text>
-                </View>
                 <Text className="text-xs text-gray-500">{item.description}</Text>
               </View>
             </View>
