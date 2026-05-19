@@ -33,6 +33,7 @@
   letter-spacing: 0.16em;
   color: var(--color-text-muted);
   text-transform: uppercase;
+  text-align: center;
 }
 
 @media (max-width: 768px) {
