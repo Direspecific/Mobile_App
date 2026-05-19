@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
+import { View, Text, Dimensions, StyleSheet } from 'react-native'
 import { Camera, useCameraDevice, useCameraPermission, useFrameOutput } from 'react-native-vision-camera'
 import { useTensorflowModel } from 'react-native-fast-tflite'
 import { useResizer } from 'react-native-vision-camera-resizer'
-import { runOnJS, useSharedValue } from 'react-native-reanimated'
-import RNFS from 'react-native-fs'
+import { runOnJS } from 'react-native-reanimated'
 
 const { width: SW, height: SH } = Dimensions.get('window')
 
-// ── Anchors ───────────────────────────────────────────────────────────────────
-// stride 8  → 16×16 grid × 2 anchors = 512
-// stride 16 → 8×8  grid × 6 anchors = 384
-// total = 896
+// ── Your existing backend IP ──────────────────────────────────────────────────
+const BACKEND_WS_URL = 'ws://192.168.1.2:8000'  // replace with your IP
+
+// ── Anchors (your existing code, unchanged) ───────────────────────────────────
 const ANCHORS = (() => {
   const anchors: { x: number; y: number }[] = []
   const layers = [
@@ -34,7 +33,6 @@ const ANCHORS = (() => {
   return anchors
 })()
 
-// ── Worklet helpers ───────────────────────────────────────────────────────────
 function sigmoid(x: number): number {
   'worklet'
   return 1 / (1 + Math.exp(-x))
@@ -60,15 +58,28 @@ function iou(
 
 type Box = { x1: number; y1: number; x2: number; y2: number }
 type ImageSize = { width: number; height: number }
+type LivenessState = 'idle' | 'connecting' | 'challenge' | 'passed' | 'failed'
 
-// ── Component ─────────────────────────────────────────────────────────────────
 export default function Index() {
-  const [boxes, setBoxes] = useState<Box[]>([])
-  const [previewSize, setPreviewSize] = useState({ width: SW, height: SH })
-  const [imageSize, setImageSize] = useState<ImageSize>({ width: 1, height: 1 })
+  const [boxes, setBoxes]               = useState<Box[]>([])
+  const [previewSize, setPreviewSize]   = useState({ width: SW, height: SH })
+  const [imageSize, setImageSize]       = useState<ImageSize>({ width: 1, height: 1 })
+  const [faceReady, setFaceReady]       = useState(false)
 
+  // ── Liveness state ──────────────────────────────────────────────────────────
+  const [livenessState, setLivenessState]         = useState<LivenessState>('idle')
+  const [currentChallenge, setCurrentChallenge]   = useState<string>('')
+  const [completedChallenges, setCompletedChallenges] = useState<string[]>([])
+  const [livenessToken, setLivenessToken]         = useState<string>('')
+  const [statusMessage, setStatusMessage]         = useState('Position your face in the frame')
+
+  const wsRef          = useRef<WebSocket | null>(null)
+  const streamInterval = useRef<ReturnType<typeof setInterval> | null>(null)
+  const lastFrameRef   = useRef<string | null>(null)  // stores latest frame as base64
+
+  // ── BlazeFace model (your existing code) ────────────────────────────────────
   const objectDetection = useTensorflowModel(
-    require('./models/blaze_face_short_range.tflite'),[]
+    require('./models/blaze_face_short_range.tflite'), []
   )
   const model = objectDetection.state === 'loaded' ? objectDetection.model : undefined
 
@@ -84,6 +95,124 @@ export default function Index() {
     scaleMode: 'cover',
   })
 
+  // ── Check if face is centered ────────────────────────────────────────────────
+  const isFaceCentered = (box: Box, imgW: number, imgH: number): boolean => {
+    'worklet'
+    const faceCx = (box.x1 + box.x2) / 2
+    const faceCy = (box.y1 + box.y2) / 2
+    const faceW  = box.x2 - box.x1
+    const faceH  = box.y2 - box.y1
+
+    const centerX = imgW / 2
+    const centerY = imgH / 2
+
+    const isCentered  = Math.abs(faceCx - centerX) < imgW * 0.2 &&
+                        Math.abs(faceCy - centerY) < imgH * 0.2
+    const isLargeEnough = faceW > imgW * 0.2 && faceH > imgH * 0.2
+    const isNotTooClose = faceW < imgW * 0.8
+
+    return isCentered && isLargeEnough && isNotTooClose
+  }
+
+  // ── Connect WebSocket to FastAPI ─────────────────────────────────────────────
+  const connectWebSocket = useCallback(() => {
+    if (wsRef.current) return  // already connected
+
+    const sessionId = `session_${Date.now()}`
+    const ws = new WebSocket(`${BACKEND_WS_URL}/ai/ws/liveness/${sessionId}`)
+    wsRef.current = ws
+
+    setLivenessState('connecting')
+    setStatusMessage('Connecting...')
+
+    ws.onopen = () => {
+      console.log('WebSocket connected')
+      setLivenessState('challenge')
+      startStreamingFrames()
+    }
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+      console.log('Received:', data)
+
+      switch (data.type) {
+        case 'challenge_start':
+          setCurrentChallenge(data.current)
+          setStatusMessage(getChallengeText(data.current))
+          break
+
+        case 'progress':
+          setCompletedChallenges(data.completed)
+          if (data.next) {
+            setCurrentChallenge(data.next)
+            setStatusMessage(getChallengeText(data.next))
+          }
+          break
+
+        case 'passed':
+          setLivenessState('passed')
+          setLivenessToken(data.token)
+          setStatusMessage('Liveness passed!')
+          stopStreamingFrames()
+          ws.close()
+          break
+
+        case 'failed':
+          setLivenessState('failed')
+          setStatusMessage(`Failed: ${data.reason}`)
+          stopStreamingFrames()
+          ws.close()
+          break
+      }
+    }
+
+    ws.onerror = (error) => {
+      console.log('WebSocket error:', error)
+      setStatusMessage('Connection error')
+      setLivenessState('failed')
+    }
+
+    ws.onclose = () => {
+      console.log('WebSocket closed')
+      wsRef.current = null
+    }
+  }, [])
+
+  // ── Stream frames to backend at 5fps ─────────────────────────────────────────
+  const startStreamingFrames = () => {
+    if (streamInterval.current) return
+
+    streamInterval.current = setInterval(() => {
+      if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return
+      if (!lastFrameRef.current) return
+
+      // Send frame as base64 JPEG string
+      wsRef.current.send(JSON.stringify({
+        type: 'frame',
+        data: lastFrameRef.current
+      }))
+    }, 200)  // 5fps
+  }
+
+  const stopStreamingFrames = () => {
+    if (streamInterval.current) {
+      clearInterval(streamInterval.current)
+      streamInterval.current = null
+    }
+  }
+
+  // ── Human readable challenge text ────────────────────────────────────────────
+  const getChallengeText = (challenge: string): string => {
+    switch (challenge) {
+      case 'blink':      return 'Please blink'
+      case 'turn_left':  return 'Turn your head left'
+      case 'turn_right': return 'Turn your head right'
+      case 'smile':      return 'Please smile'
+      default:           return challenge
+    }
+  }
+
+  // ── Frame processor (your existing BlazeFace code + new logic) ───────────────
   const frameOutput = useFrameOutput({
     pixelFormat: 'yuv',
     enablePhysicalBufferRotation: true,
@@ -94,31 +223,23 @@ export default function Index() {
       const imageWidth  = frame.width
       const imageHeight = frame.height
 
-      // const resized = resizer.resize(frame)
-      // const pixels  = resized.getPixelBuffer()
-      // const outputs = model.runSync([pixels])
+      const resized     = resizer.resize(frame)
+      const rawPixels   = resized.getPixelBuffer()
+      const raw         = new Float32Array(rawPixels as unknown as ArrayBuffer)
 
-      const resized   = resizer.resize(frame)
-      const rawPixels = resized.getPixelBuffer()
-      const raw       = new Float32Array(rawPixels as unknown as ArrayBuffer)
-
-      // Normalize [0,1] → [-1,1] to match Python preprocessing
-      const normalized = new Float32Array(raw.length)
+      const normalized  = new Float32Array(raw.length)
       for (let i = 0; i < raw.length; i++) {
         normalized[i] = raw[i] * 2.0 - 1.0
       }
 
-      const outputs = model.runSync([normalized.buffer])
-
+      const outputs    = model.runSync([normalized.buffer])
       resized.dispose()
       frame.dispose()
 
-      // outputs[0] = regressors [896, 16]
-      // outputs[1] = scores     [896, 1]
       const regressors = new Float32Array(outputs[0] as ArrayBuffer)
-      const scores = new Float32Array(outputs[1] as ArrayBuffer)
+      const scores     = new Float32Array(outputs[1] as ArrayBuffer)
 
-      const THRESHOLD  = 0.75  // official MediaPipe threshold for short range
+      const THRESHOLD  = 0.75
       const NMS_THRESH = 0.5
 
       const rx1: number[] = []
@@ -131,7 +252,6 @@ export default function Index() {
         const score = sigmoid(scores[i])
         if (score < THRESHOLD) continue
 
-        // const regIdx = i - 1  // even neighbor for regressors and anchor
         const anchor = ANCHORS[i]
         const off    = i * 16
 
@@ -147,7 +267,6 @@ export default function Index() {
         rsc.push(score)
       }
 
-      // NMS
       const suppressed = new Array(rx1.length).fill(false)
       const result: Box[] = []
 
@@ -159,18 +278,36 @@ export default function Index() {
           if (iou(
             rx1[i], ry1[i], rx2[i], ry2[i],
             rx1[j], ry1[j], rx2[j], ry2[j]
-          ) > NMS_THRESH) {
-            suppressed[j] = true
-          }
+          ) > NMS_THRESH) suppressed[j] = true
         }
       }
 
       const best = result.length > 0 ? [result[0]] : []
 
+      // Check if face is centered and ready
+      const centered = best.length > 0 &&
+        isFaceCentered(best[0], imageWidth, imageHeight)
+
       runOnJS(setImageSize)({ width: imageWidth, height: imageHeight })
       runOnJS(setBoxes)(best)
+      runOnJS(setFaceReady)(centered)
     }
   })
+
+  // ── Auto connect when face is centered ───────────────────────────────────────
+  useEffect(() => {
+    if (faceReady && livenessState === 'idle') {
+      connectWebSocket()
+    }
+  }, [faceReady, livenessState])
+
+  // ── Cleanup on unmount ───────────────────────────────────────────────────────
+  useEffect(() => {
+    return () => {
+      stopStreamingFrames()
+      wsRef.current?.close()
+    }
+  }, [])
 
   useEffect(() => {
     if (!hasPermission) requestPermission()
@@ -178,11 +315,14 @@ export default function Index() {
 
   if (!device) return <View><Text>No camera device found</Text></View>
 
-  // Matches OverlayView.kt scaleFactor logic exactly
   const scaleFactor = Math.min(
     previewSize.width  / imageSize.width,
     previewSize.height / imageSize.height
   )
+
+  const boxColor = livenessState === 'passed' ? 'green'
+                 : livenessState === 'failed' ? 'red'
+                 : faceReady ? 'yellow' : 'red'
 
   return (
     <View style={{ flex: 1 }}>
@@ -196,20 +336,94 @@ export default function Index() {
           height: e.nativeEvent.layout.height,
         })}
       />
+
+      {/* Bounding boxes */}
       {boxes.map((box, i) => (
         <View
           key={i}
           style={{
-            position: 'absolute',
-            left:   box.x1 * scaleFactor,
-            top:    box.y1 * scaleFactor,
-            width:  (box.x2 - box.x1) * scaleFactor,
-            height: (box.y2 - box.y1) * scaleFactor,
+            position:    'absolute',
+            left:        box.x1 * scaleFactor,
+            top:         box.y1 * scaleFactor,
+            width:       (box.x2 - box.x1) * scaleFactor,
+            height:      (box.y2 - box.y1) * scaleFactor,
             borderWidth: 2,
-            borderColor: 'red',
+            borderColor: boxColor,
           }}
         />
       ))}
+
+      {/* Status message */}
+      <View style={styles.statusContainer}>
+        <Text style={styles.statusText}>{statusMessage}</Text>
+      </View>
+
+      {/* Challenge progress */}
+      {livenessState === 'challenge' && (
+        <View style={styles.progressContainer}>
+          <Text style={styles.progressText}>
+            {completedChallenges.length} of 3 completed
+          </Text>
+        </View>
+      )}
+
+      {/* Success message */}
+      {livenessState === 'passed' && (
+        <View style={styles.successContainer}>
+          <Text style={styles.successText}>✓ Liveness Verified</Text>
+          <Text style={styles.tokenText}>Token: {livenessToken}</Text>
+        </View>
+      )}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  statusContainer: {
+    position:        'absolute',
+    bottom:          100,
+    left:            0,
+    right:           0,
+    alignItems:      'center',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    padding:         12,
+  },
+  statusText: {
+    color:    'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  progressContainer: {
+    position:        'absolute',
+    top:             50,
+    left:            0,
+    right:           0,
+    alignItems:      'center',
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    padding:         8,
+  },
+  progressText: {
+    color:    'white',
+    fontSize: 14,
+  },
+  successContainer: {
+    position:        'absolute',
+    top:             120,
+    left:            20,
+    right:           20,
+    alignItems:      'center',
+    backgroundColor: 'rgba(0,128,0,0.8)',
+    padding:         16,
+    borderRadius:    12,
+  },
+  successText: {
+    color:      'white',
+    fontSize:   20,
+    fontWeight: 'bold',
+  },
+  tokenText: {
+    color:    'white',
+    fontSize: 10,
+    marginTop: 4,
+  },
+})

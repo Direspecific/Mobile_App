@@ -1,0 +1,73 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+.env.*
+
+# Environment variables
+.env
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Database
+*.db
+*.sqlite3
+
+# FastAPI uploads/temp files
+uploads/
+temp/
+tmp/
+
+# Face scan datasets/models
+datasets/
+models/
+checkpoints/
+weights/
+
+# Large ML files
+*.h5
+*.pt
+*.pth
+*.onnx
+*.ckpt
+*.pickle
+*.pkl
+
+# Runtime cache
+.cache/
+
+# Docker
+*.pid
+
+# mypy
+.mypy_cache/
+
+# Ruff/lint cache
+.ruff_cache/
