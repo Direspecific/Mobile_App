@@ -1,5 +1,5 @@
 import React, { useState, type ReactNode } from "react";
-import type { AuthUser } from "../services/api";
+import { isAdminUser, type AuthUser } from "../services/api";
 import { AuthContext } from "./AuthContext";
 
 const AUTH_STORAGE_KEY = "votelec.auth";
@@ -14,9 +14,11 @@ function getStoredAuth() {
   try {
     const parsed = JSON.parse(saved) as { token?: string; user?: AuthUser };
 
-    if (parsed.token && parsed.user) {
+    if (parsed.token && parsed.user && isAdminUser(parsed.user)) {
       return { token: parsed.token, user: parsed.user };
     }
+
+    window.localStorage.removeItem(AUTH_STORAGE_KEY);
   } catch {
     window.localStorage.removeItem(AUTH_STORAGE_KEY);
   }

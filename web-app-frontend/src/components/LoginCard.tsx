@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { loginAccount } from "../services/api";
+import { isAdminUser, loginAccount } from "../services/api";
 import InputField from "./InputField";
 import CheckboxField from "./CheckboxField";
 import LoginButton from "./LoginButton";
@@ -29,6 +29,11 @@ const LoginCard: React.FC = () => {
       setLoading(true);
       const response = await loginAccount(email.trim(), password);
 
+      if (!isAdminUser(response.user)) {
+        setError("Only admin accounts can access the web dashboard.");
+        return;
+      }
+
       login(response.token, response.user, rememberMe);
       navigate("/dashboard");
     } catch (err) {
@@ -55,10 +60,8 @@ const LoginCard: React.FC = () => {
         {error && <p className="login-card__error" role="alert">{error}</p>}
         <LoginButton loading={loading} />
       </form>
-      <p className="login-card__register">
-        Don't have an account?{" "}
-        <button type="button" className="login-card__register-link"
-          onClick={() => navigate("/register")}>request to be registered now</button>
+      <p className="login-card__register login-card__register--muted">
+        Admin accounts are managed by the system administrator.
       </p>
     </section>
   );

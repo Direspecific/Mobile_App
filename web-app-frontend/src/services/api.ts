@@ -14,6 +14,8 @@ export type AuthResponse = {
   user: AuthUser;
 };
 
+export const ADMIN_ROLE = "ADMIN";
+
 type BackendStatus = "UNREGISTERED" | "PENDING" | "VERIFIED" | "REJECTED";
 
 type BackendAuthResponse = {
@@ -65,6 +67,10 @@ function getMessageFromResponse(data: unknown) {
   }
 
   return "Request failed. Please try again.";
+}
+
+export function isAdminUser(user: Pick<AuthUser, "role"> | null | undefined) {
+  return user?.role?.toUpperCase() === ADMIN_ROLE;
 }
 
 async function apiRequest<T>(path: string, options: ApiOptions = {}): Promise<T> {

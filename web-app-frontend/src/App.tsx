@@ -2,7 +2,6 @@ import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider";
 import LoginPage from "./pages/LoginPage";
-import RegistrationPage from "./pages/RegistrationPage";
 import DashboardPage from "./pages/DashboardPage"
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -13,7 +12,6 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegistrationPage />} />
           <Route
             path="/dashboard"
             element={
@@ -22,6 +20,7 @@ const App: React.FC = () => {
               </ProtectedRoute>
             }
           />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </div>
     </AuthProvider>
